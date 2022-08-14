@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "768875363103",
+    "project_id": "shcms-9a977",
+    "storage_bucket": "shcms-9a977.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:768875363103:android:1245e736198f2aaac10e2a",
+        "android_client_info": {
+          "package_name": "com.example.shcms"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "768875363103-08185splji2654mia608r9dmiiogu3el.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shcms",
+            "certificate_hash": "f5db81e4f9282a8031192b6511d506055906db73"
+          }
+        },
+        {
+          "client_id": "768875363103-jvej8g435t8r6guipc876ov5abde4770.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYOiOXVMDMyOKpKbGjGgyCGSi_tU1PoUQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "768875363103-jvej8g435t8r6guipc876ov5abde4770.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
