@@ -20,4 +20,8 @@
     <dimen name="progress_bar_size">50dp</dimen>
     <dimen name="progress_text_marginStart">16dp</dimen>
     <dimen name="progress_text_size">16sp</dimen>
+
+
+    <dimen name="height_of_nav_main">200dp</dimen>
+
 </resources>
