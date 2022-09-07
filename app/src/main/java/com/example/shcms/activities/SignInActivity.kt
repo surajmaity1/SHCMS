@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import com.example.shcms.R
+import com.example.shcms.models.User
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_sign_in.*
 
@@ -30,7 +31,11 @@ class SignInActivity : BaseActivity() {
 
         setupActionBar()
     }
-
+    fun signInSuccess(user : User){
+        hideProgressDialog()
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
+    }
     private fun setupActionBar(){
         setSupportActionBar(toolbar_sign_in_activity)
 
