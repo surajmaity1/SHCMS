@@ -13,6 +13,8 @@ import kotlinx.android.synthetic.main.dialog_progress.*
 
 open class BaseActivity : AppCompatActivity() {
 
+
+
     private var doubleBackToExitPressedOnce = false;
     private lateinit var mProgressDialog : Dialog
 
