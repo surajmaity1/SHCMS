@@ -8,8 +8,10 @@ import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import com.example.shcms.R
+import com.example.shcms.firebase.FirestoreClass
 import com.example.shcms.models.User
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_sign_in.*
 
 class SignInActivity : BaseActivity() {
@@ -20,10 +22,7 @@ class SignInActivity : BaseActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
+        fullScreenMode()
 
         btn_sign_in.setOnClickListener {
             signInRegisteredUser()
@@ -63,9 +62,18 @@ class SignInActivity : BaseActivity() {
                 .addOnCompleteListener(this){ task ->
                     hideProgressDialog()
                     if (task.isSuccessful){
-                        Log.d("Sign in", "signInWithEmail:success")
-                        val user = auth.currentUser
-                        startActivity(Intent(this, MainActivity::class.java))
+                        if(checkMailVerification()){
+                            Log.d("Sign in", "signInWithEmail:success")
+                            val intent = Intent(this, MainActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
+                        else{
+                            Toast.makeText(
+                                this, "Please verify your email",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                     else{
                         Log.w("Sign in", "signInWithEmail:failure", task.exception)
@@ -75,6 +83,14 @@ class SignInActivity : BaseActivity() {
 
         }
 
+    }
+    private fun checkMailVerification() : Boolean{
+        val user = auth.currentUser
+        if (user != null){
+            val emailVerifier = user.isEmailVerified
+            if (emailVerifier) return true
+        }
+        return false
     }
     private fun validateForm(email : String, password : String) : Boolean{
         return when {

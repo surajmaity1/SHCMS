@@ -1,6 +1,9 @@
 package com.example.shcms.firebase
 
+import android.app.Activity
 import android.util.Log
+import com.example.shcms.activities.BaseActivity
+import com.example.shcms.activities.MainActivity
 import com.example.shcms.activities.SignInActivity
 import com.example.shcms.activities.SignUpActivity
 import com.example.shcms.models.User
@@ -8,7 +11,6 @@ import com.example.shcms.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-
 class FirestoreClass {
     private val mFireStore = FirebaseFirestore.getInstance()
 
@@ -17,9 +19,9 @@ class FirestoreClass {
             .document(getCurrentUserId())
             .set(userInfo, SetOptions.merge())
             .addOnSuccessListener {
-                activity.userRegisteredSuccess()
+                FirebaseAuth.getInstance().signOut()
             }.addOnFailureListener {
-                e->
+                    e->
                 Log.e(activity.javaClass.simpleName,"Error while getting loggedIn user details",
                     e)
             }

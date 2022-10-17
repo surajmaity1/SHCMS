@@ -8,15 +8,12 @@ import android.view.WindowManager
 import com.example.shcms.R
 import com.example.shcms.firebase.FirestoreClass
 
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
+        fullScreenMode()
 
 
         Handler().postDelayed({

@@ -1,25 +1,29 @@
 package com.example.shcms.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import com.example.shcms.R
 import com.example.shcms.firebase.FirestoreClass
 import com.example.shcms.models.User
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_sign_up.*
-
+import kotlinx.android.synthetic.main.dialog_progress.*
 class SignUpActivity : BaseActivity() {
+
+    private val TAG = "SignUpActivity"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
 
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
+        fullScreenMode()
 
         toolbar_sign_up_activity.setNavigationOnClickListener { onBackPressed() }
         setupActionBar()
@@ -27,17 +31,6 @@ class SignUpActivity : BaseActivity() {
         btn_sign_up.setOnClickListener {
             registerUser()
         }
-    }
-    fun userRegisteredSuccess(){
-        Toast.makeText(
-            this,
-            "you have successfully registered",
-            Toast.LENGTH_SHORT
-        ).show()
-        hideProgressDialog()
-
-        FirebaseAuth.getInstance().signOut()
-        finish()
     }
     private fun setupActionBar(){
         setSupportActionBar(toolbar_sign_up_activity)
@@ -65,23 +58,44 @@ class SignUpActivity : BaseActivity() {
             showProgressDialog(resources.getString(R.string.please_wait))
             FirebaseAuth.getInstance()
                 .createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
+                .addOnCompleteListener(this) { task ->
 
                     if (task.isSuccessful) {
+
                         val firebaseUser: FirebaseUser = task.result!!.user!!
                         val registeredEmail = firebaseUser.email!!
                         val user = User(firebaseUser.uid, registeredEmail)
 
                         FirestoreClass().registerUser(this, user)
+                        sendEmailVerification()
+
+
                     } else {
-                        Toast.makeText(
-                            this,
-                            "Registration failed",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        hideProgressDialog()
+                        Toast.makeText(this, task.exception!!.message.toString(), Toast.LENGTH_SHORT).show()
                     }
                 }
         }
+    }
+
+    private fun sendEmailVerification(){
+        hideProgressDialog()
+        val user = FirebaseAuth.getInstance().currentUser
+        user!!.sendEmailVerification()
+            .addOnCompleteListener{ task ->
+                if (task.isSuccessful){
+                    Log.d(TAG, "Email sent.")
+                    Toast.makeText(
+                        this, "Verification email is sent to your mail. Verify your mail.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    FirebaseAuth.getInstance().signOut()
+                    val intent = Intent(this, SignInActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+            }
+
     }
 
     private fun validateForm(name : String, email : String, password : String) : Boolean{
