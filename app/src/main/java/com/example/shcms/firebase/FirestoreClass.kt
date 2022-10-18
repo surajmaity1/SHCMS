@@ -2,8 +2,9 @@ package com.example.shcms.firebase
 
 import android.app.Activity
 import android.util.Log
-import com.example.shcms.activities.BaseActivity
+import android.widget.Toast
 import com.example.shcms.activities.MainActivity
+import com.example.shcms.activities.MyProfile
 import com.example.shcms.activities.SignInActivity
 import com.example.shcms.activities.SignUpActivity
 import com.example.shcms.models.User
@@ -27,17 +28,55 @@ class FirestoreClass {
             }
     }
 
-    fun signInUser(activity: SignInActivity){
+    fun updateUserProfileData(activity: MyProfile, userHashMap: HashMap<String, Any>){
+        mFireStore.collection(Constants.USERS)
+            .document(getCurrentUserId())
+            .update(userHashMap)
+            .addOnSuccessListener {
+                Log.i(activity.javaClass.simpleName, "Profile Data Updated")
+                Toast.makeText(activity,
+                    "Profile Updated Successfully!", Toast.LENGTH_SHORT).show()
+                activity.profileUpdateSuccess()
+            }
+            .addOnFailureListener { e->
+                activity.hideProgressDialog()
+                Log.e(activity.javaClass.simpleName,
+                    "Error While Creating a Board", e)
+                Toast.makeText(activity,
+                    "Profile Update Failed!", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    fun loadUserData(activity: Activity){
         mFireStore.collection(Constants.USERS)
             .document(getCurrentUserId())
             .get()
             .addOnSuccessListener {document ->
-                val loggedInUser = document.toObject(User::class.java)
+                val loggedInUser = document.toObject(User::class.java)!!
 
-                if (loggedInUser != null)
-                    activity.signInSuccess(loggedInUser)
+                when(activity){
+                    is SignInActivity ->{
+                        activity.signInSuccess(loggedInUser)
+                    }
+                    is MainActivity -> {
+                        activity.updateNavigationUserDetails(loggedInUser)
+                    }
+                    is MyProfile ->{
+                        activity.setUserDataInUI(loggedInUser)
+                    }
+                }
+
             }.addOnFailureListener {
                     e->
+
+                when(activity){
+                    is SignInActivity ->{
+                        activity.hideProgressDialog()
+                    }
+                    is MainActivity -> {
+                        activity.hideProgressDialog()
+                    }
+                }
                 Log.e("SignInUser","Error while getting loggedIn user details",
                     e)
             }

@@ -64,7 +64,8 @@ class SignUpActivity : BaseActivity() {
 
                         val firebaseUser: FirebaseUser = task.result!!.user!!
                         val registeredEmail = firebaseUser.email!!
-                        val user = User(firebaseUser.uid, registeredEmail)
+
+                        val user = User(firebaseUser.uid, name, registeredEmail)
 
                         FirestoreClass().registerUser(this, user)
                         sendEmailVerification()
