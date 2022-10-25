@@ -25,4 +25,6 @@
     <dimen name="authentication_screen_til_marginTop">20dp</dimen>
 
     <color name="snackbar_error_color">#F72400</color>
+
+    <color name="divider_color">#EAEAEA</color>
 </resources>

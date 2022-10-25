@@ -3,10 +3,8 @@ package com.example.shcms.firebase
 import android.app.Activity
 import android.util.Log
 import android.widget.Toast
-import com.example.shcms.activities.MainActivity
-import com.example.shcms.activities.MyProfile
-import com.example.shcms.activities.SignInActivity
-import com.example.shcms.activities.SignUpActivity
+import com.example.shcms.activities.*
+import com.example.shcms.models.Board
 import com.example.shcms.models.User
 import com.example.shcms.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
@@ -25,6 +23,26 @@ class FirestoreClass {
                     e->
                 Log.e(activity.javaClass.simpleName,"Error while getting loggedIn user details",
                     e)
+            }
+    }
+
+    fun getBoardsList(activity: MainActivity){
+        mFireStore.collection(Constants.BOARDS)
+            .whereArrayContains(Constants.ASSIGNED_TO, getCurrentUserId())
+            .get().addOnSuccessListener { document ->
+                Log.i(activity.javaClass.simpleName, document.documents.toString())
+                val boardList: ArrayList<Board> = ArrayList()
+                for(i in document.documents){
+                    val board = i.toObject(Board::class.java)!!
+                    board.documetId = i.id
+                    boardList.add(board)
+                }
+
+                activity.populateBoardsListToUI(boardList)
+            }
+            .addOnFailureListener {e ->
+                activity.hideProgressDialog()
+                Log.e(activity.javaClass.simpleName, "Error while creating a board", e)
             }
     }
 
@@ -47,7 +65,27 @@ class FirestoreClass {
             }
     }
 
-    fun loadUserData(activity: Activity){
+    fun createBoard(activity: CreateBoard, board: Board) {
+
+        mFireStore.collection(Constants.BOARDS)
+            .document()
+            .set(board, SetOptions.merge())
+            .addOnSuccessListener {
+                Log.e(activity.javaClass.simpleName, "Board created successfully.")
+                Toast.makeText(activity, "Board created successfully.", Toast.LENGTH_SHORT).show()
+                activity.boardCreatedSuccessfully()
+            }
+            .addOnFailureListener { e ->
+                activity.hideProgressDialog()
+                Log.e(
+                    activity.javaClass.simpleName,
+                    "Error while creating a board.",
+                    e
+                )
+            }
+    }
+
+    fun loadUserData(activity: Activity, readBoardList: Boolean = false){
         mFireStore.collection(Constants.USERS)
             .document(getCurrentUserId())
             .get()
@@ -59,7 +97,7 @@ class FirestoreClass {
                         activity.signInSuccess(loggedInUser)
                     }
                     is MainActivity -> {
-                        activity.updateNavigationUserDetails(loggedInUser)
+                        activity.updateNavigationUserDetails(loggedInUser, readBoardList)
                     }
                     is MyProfile ->{
                         activity.setUserDataInUI(loggedInUser)
