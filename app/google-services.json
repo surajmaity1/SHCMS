@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "768875363103",
+    "firebase_url": "https://shcms-9a977-default-rtdb.firebaseio.com",
     "project_id": "shcms-9a977",
     "storage_bucket": "shcms-9a977.appspot.com"
   },
@@ -19,6 +20,14 @@
           "android_info": {
             "package_name": "com.example.shcms",
             "certificate_hash": "f5db81e4f9282a8031192b6511d506055906db73"
+          }
+        },
+        {
+          "client_id": "768875363103-os5i5d2846e7sodnmkbpil5lffv87rem.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shcms",
+            "certificate_hash": "34296734a09cc83913ce446cd6f87e0de85f68eb"
           }
         },
         {
