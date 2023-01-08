@@ -9,14 +9,16 @@ data class Board(
     val image: String = "",
     val createdBy: String = "",
     val assignedTo: ArrayList<String> = ArrayList(),
-    var documetId: String = ""
+    var documentId: String = "",
+    var taskList: ArrayList<Task> = ArrayList()
 ) : Parcelable {
     constructor(source: Parcel) : this(
         source.readString()!!,
         source.readString()!!,
         source.readString()!!,
         source.createStringArrayList()!!,
-        source.readString()!!
+        source.readString()!!,
+        source.createTypedArrayList(Task.CREATOR)!!
     )
 
     override fun describeContents() = 0
@@ -26,7 +28,8 @@ data class Board(
         writeString(image)
         writeString(createdBy)
         writeStringList(assignedTo)
-        writeString(documetId)
+        writeString(documentId)
+        writeTypedList(taskList)
     }
 
     companion object {

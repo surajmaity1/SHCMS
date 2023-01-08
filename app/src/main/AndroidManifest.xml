@@ -14,21 +14,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SHCMS">
         <activity
+            android:name=".activities.TaskListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.SCHMS"/>
+        <activity
             android:name=".activities.CreateBoard"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.SCHMS">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+            android:theme="@style/AppTheme.SCHMS"/>
         <activity
             android:name=".activities.MyProfile"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.SCHMS">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+            android:theme="@style/AppTheme.SCHMS"/>
         <activity
             android:name=".activities.BaseActivity"
             android:exported="true" />
